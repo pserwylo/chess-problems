@@ -10,6 +10,7 @@ var BoardUi = klass( function( board, selector ) {
 	render: function() {
 		this._renderBoard();
 		this._renderPieces();
+		return this;
 	},
 
 	getPiece: function( colour, type, number ) {
@@ -22,19 +23,41 @@ var BoardUi = klass( function( board, selector ) {
 	_renderPieces: function() {
 
 		var allPieces = this.board.pieceManager.getAllPieces();
-		var output = "<div class='chess-pieces'>";
+		this.domPieces = jQuery( "<div class='chess-pieces'></div>" );
+		this.dom.append( this.domPieces );
+
+		var tileSize = this.domBoard.find( '.cell').width();
+		var boardLeft = this.domBoard.offset().left;
+		var boardTop = this.domBoard.offset().top;
 
 		for ( var i = 0; i < allPieces.length; i ++ ) {
 
 			var piece = allPieces[ i ];
-			output += "<div class='chess-piece " + piece.getType() + " " + '></div>"
+			var pieceUi = new PieceUi( piece, this );
+
+			this.domPieces.append( pieceUi.dom );
+
+			var top = boardTop + tileSize * piece.cell.y;
+			var left = boardLeft + tileSize * piece.cell.x;
+			pieceUi.setOffset( top, left );
 
 		}
 
-		output += "</div>";
+	},
 
-		this.domPieces = jQuery( output );
-		this.dom.append( this.domPieces );
+	unhighlightAll: function() {
+
+		this.domBoard.find( '.cell' ).removeClass( 'highlighted takeable' );
+
+	},
+
+	highlightCell: function( cell, isTakeable ) {
+
+		var domCell = this.domBoard.find( '.cell-' + cell.x + '-' + cell.y );
+		domCell.addClass( 'highlighted' );
+		if ( isTakeable ) {
+			domCell.addClass( 'takeable' );
+		}
 
 	},
 
@@ -48,15 +71,15 @@ var BoardUi = klass( function( board, selector ) {
 			output += "	<li>\n";
 			output += "		<ul class='row row-" + y + "'>\n";
 
-			for ( var x = 0; x < 8; x ++ )
-			{
+			for ( var x = 0; x < 8; x ++ ) {
 
-				var blackClass = "";
-				if ( y % 2 == 0 && x % 2 == 1 || y % 2 == 1 && x % 2 == 0 )
-				{
-					blackClass = 'black';
+				var colourClass = "";
+				if ( y % 2 == 0 && x % 2 == 1 || y % 2 == 1 && x % 2 == 0 ) {
+					colourClass = 'black';
+				} else {
+					colourClass = 'white';
 				}
-				output += "			<li class='cell cell-" + x + "-" + y + " col-" + x + " " + blackClass + "'></li>\n";
+				output += "			<li class='cell cell-" + x + "-" + y + " col-" + x + " " + colourClass + "'></li>\n";
 
 			}
 

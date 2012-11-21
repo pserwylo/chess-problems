@@ -3,6 +3,9 @@ var PieceManager = klass( function( board ) {
 	this.board = board;
 	this.pieces = {};
 
+	this.allWhitePieces = null;
+	this.allBlackPieces = null;
+	this.allPieces = null;
 
 }).statics({
 
@@ -21,19 +24,41 @@ var PieceManager = klass( function( board ) {
 
 	getAllPieces: function( colour ) {
 
-		var allPieces = [];
-
 		if ( typeof colour === 'undefined' ) {
 
-			allPieces = this.getAllPieces( Piece.WHITE ).concat( this.getAllPieces( Piece.BLACK ) );
+			if ( this.allPieces == null ) {
+
+				this.allPieces = this.getAllPieces( Piece.WHITE ).concat( this.getAllPieces( Piece.BLACK ) );
+
+			}
+
+			return this.allPieces;
 
 		}
 		else
 		{
-			allPieces = [
-				this.getPiece( colour, Rook.TYPE, 0 ),
-				this.getPiece( colour, Rook.TYPE, 1 )
-			];
+			var pieces = colour == Piece.WHITE ? this.allWhitePieces : this.allBlackPieces;
+			if ( pieces == null ) {
+
+				pieces = [
+					this.getPiece( colour, Rook.TYPE, 0 ),
+					this.getPiece( colour, Rook.TYPE, 1 )
+				];
+
+				for ( var i = 0; i < 8; i ++ ) {
+					pieces.push( this.getPiece( colour, Pawn.TYPE, i ) );
+				}
+
+				if ( colour == Piece.WHITE ) {
+					this.allWhitePieces = pieces;
+				} else if ( colour == Piece.BLACK ) {
+					this.allBlackPieces = pieces;
+				}
+
+				return pieces;
+
+			}
+
 		}
 
 		return allPieces;
@@ -71,6 +96,7 @@ var PieceManager = klass( function( board ) {
 	_createPiecesForColour: function( colour ) {
 
 		this._createRooks( colour );
+		this._createPawns( colour );
 
 	},
 
@@ -79,6 +105,12 @@ var PieceManager = klass( function( board ) {
 		this.pieces[ this.generateId( type, piece.colour, number ) ] = piece;
 	},
 
+	_createPawns: function( colour ) {
+
+		for ( var i = 0; i < 8; i ++ ) {
+			this._createPiece( Pawn.TYPE, new Pawn( this.board, colour ), i );
+		}
+	},
 
 	_createRooks: function( colour ) {
 

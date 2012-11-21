@@ -30,12 +30,27 @@ var Board = klass( function() {
 
 	},
 
+	getPieceAt: function( x, y ) {
+
+		var foundPiece = null;
+		var allPieces = this.pieceManager.getAllPieces();
+		for ( var i = 0; i < allPieces.length; i ++ ) {
+			var piece = allPieces[ i ];
+			if ( piece.cell != null && piece.cell.x == x && piece.cell.y == y ) {
+				foundPiece = piece;
+				break;
+			}
+		}
+		return foundPiece;
+
+	},
+
 	placeDefaultPieces: function() {
 
 		// Specifies the rows for the black and white pieces...
 		var rows = {};
 		rows[ Piece.WHITE ] = { back: 0, front: 1};
-		rows[ Piece.BLACK ] = { back: 6, front: 7};
+		rows[ Piece.BLACK ] = { back: 7, front: 6};
 
 		for ( var i = 0; i < Piece.COLOURS.length; i ++ )
 		{
@@ -46,6 +61,10 @@ var Board = klass( function() {
 
 			this.pieceManager.getPiece( colour, Rook.TYPE, 0 ).cell = this.getCell( 0, backRow );
 			this.pieceManager.getPiece( colour, Rook.TYPE, 1 ).cell = this.getCell( 7, backRow );
+
+			for ( var j = 0; j < 8; j ++ ) {
+				this.pieceManager.getPiece( colour, Pawn.TYPE, j ).cell = this.getCell( j, frontRow );
+			}
 
 		}
 

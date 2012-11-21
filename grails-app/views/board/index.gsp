@@ -13,21 +13,19 @@
 
 		<script type="text/javascript">
 
+			var board;
+			var boardUi;
+
 			window.onload = function()
 			{
 
-				var board = new Board();
-				board.placeDefaultPieces();
+				board = new Board().placeDefaultPieces();
 
-				var whiteRook1 = board.pieceManager.getPiece( Piece.WHITE, Rook.TYPE, 0 );
-				var whiteRook2 = board.pieceManager.getPiece( Piece.WHITE, Rook.TYPE, 1 );
-				var blackRook1 = board.pieceManager.getPiece( Piece.BLACK, Rook.TYPE, 0 );
-				var blackRook2 = board.pieceManager.getPiece( Piece.BLACK, Rook.TYPE, 1 );
+				board.pieceManager.getPiece( Piece.WHITE, Pawn.TYPE, 0 ).cell = board.getCell( 0, 5 );
+				board.pieceManager.getPiece( Piece.WHITE, Pawn.TYPE, 3 ).cell = board.getCell( 3, 3 );
+				board.pieceManager.getPiece( Piece.WHITE, Pawn.TYPE, 5 ).cell = board.getCell( 5, 5 );
 
-				blackRook1.cell = board.getCell( 3, 0 );
-
-				var boardUi = new BoardUi( board, '#chess-board' );
-				boardUi.render();
+				boardUi = new BoardUi( board, '#chess-board' ).render();
 
 			}
 

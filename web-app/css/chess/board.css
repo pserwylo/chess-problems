@@ -1,7 +1,5 @@
 .chess-board .cell {
-
 	border: solid 1px black;
-
 }
 
 .chess-board li {
@@ -15,7 +13,37 @@
 	height: 50px;
 	display: block;
 	float: left;
+    z-index: 1;
+    margin-left: -1px;
+    margin-top: -1px;
 }
+
+.chess-board .cell.highlighted {
+    border-color: #277676;
+    z-index: 2;
+}
+
+.chess-board .cell.black.highlighted {
+    background-color: #9cdede;
+}
+
+.chess-board .cell.white.highlighted {
+    background-color: #d0efef;
+}
+
+.chess-board .cell.highlighted.takeable {
+    border-color: #be3f3f;
+    z-index: 2;
+}
+
+.chess-board .cell.black.highlighted.takeable {
+    background-color: #d68484;
+}
+
+.chess-board .cell.white.highlighted.takeable {
+    background-color: #e1a6a6;
+}
+
 
 .chess-board .row {
 	clear: both;
